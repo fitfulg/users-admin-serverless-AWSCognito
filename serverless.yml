@@ -1,0 +1,40 @@
+service: ercardona-workshop8
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-1
+  environment:
+    USER_POOL_ID:
+      Ref: CognitoUserPool
+    APP_CLIENT_ID:
+      Ref: CognitoUserPoolClient
+    REGION: ${self:provider.region}
+
+custom:
+  userPoolName: ${self:service}-${self:provider.stage}-user-pool
+  userPoolClient: ${self:service}-${self:provider.stage}-user-pool-client
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.userPoolName}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.userPoolClient}
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - ADMIN_NO_SRP_AUTH
+        GenerateSecret: false
