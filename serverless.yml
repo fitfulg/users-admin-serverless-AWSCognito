@@ -19,6 +19,14 @@ custom:
   userPoolName: ${self:service}-${self:provider.stage}-user-pool
   userPoolClient: ${self:service}-${self:provider.stage}-user-pool-client
 
+functions:
+  getInfo:
+    handler: src/handlers/getInfo/index.handler
+    events:
+      - http:
+          path: /api/info
+          method: get
+
 resources:
   Resources:
     CognitoUserPool:
