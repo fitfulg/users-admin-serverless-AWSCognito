@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "title": "Verify Code Model",
+  "description": "This is an example of body we need in order to verify a new user",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "registration code received by email"
+    },
+    "email": {
+      "type": "string",
+      "description": "email address of the new user",
+      "format": "email"
+    }
+  },
+  "required": ["email", "code"]
+}

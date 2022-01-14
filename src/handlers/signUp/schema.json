@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "title": "SignUp Model",
+  "description": "This is an example of body we need in order to register a user",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "email address of the new user",
+      "format": "email"
+    },
+    "name": {
+      "type": "string",
+      "description": "user name",
+      "minLength": 2,
+      "maxLength": 10
+    },
+    "password": {
+      "type": "string",
+      "description": "password of the new user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+      "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+    }
+  },
+  "required": ["email", "name", "password"]
+}
