@@ -42,3 +42,22 @@ serverless.yml:
 > Deployar
 >
 > > Comprobación del enpoint GET en postman para verificación que los datos de userPoolId, userPoolClient y región sean los que observamos desde Cognito.
+
+---
+
+## 3 Crear flujo de SignUp
+
+### Crear lamdas para regiistro de un usuario, con siguiente flujo:
+
+- El usuario ingresa su nombre, email y contraseña en un endpoint que crearemos
+- Dichos datos son enviados a Cognito y se crea el usuario con un estado de Unconfirmed
+- Cognito le va a enviar un mail a nuestro usuario con un codigo de verificacion
+- El usuario ingresara en un nuevo endpoint su email y el codigo de verificacion
+- Cognito cambia el estado de nuestro usuario a Confirmed y ya esta listo para pedir tokens
+
+#### Instalamos libreria para poder trabajar con Cognito y node-fetch para los llamados a Cognito:
+
+```
+npm install amazon-cognito-identity-js
+npm install node-fetch@2
+```

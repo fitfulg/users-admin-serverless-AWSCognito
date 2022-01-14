@@ -26,7 +26,24 @@ functions:
       - http:
           path: /api/info
           method: get
-
+  signUp:
+    handler: src/handlers/signUp/index.handler
+    events:
+      - http:
+          path: /api/user/signup
+          method: post
+          request:
+            schemas:
+              application/json: ${file(src/handlers/signUp/schema.json)}
+  verifyCode:
+    handler: src/handlers/verifyCode/index.handler
+    events:
+      - http:
+          path: /api/user/verify
+          method: post
+          request:
+            schemas:
+              application/json: ${file(src/handlers/verifyCode/schema.json)}
 resources:
   Resources:
     CognitoUserPool:

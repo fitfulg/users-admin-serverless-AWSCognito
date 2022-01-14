@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "ercardona",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "amazon-cognito-identity-js": "^5.2.4",
+    "node-fetch": "^2.6.6"
+  }
 }
