@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "title": "SignUp Model",
+  "description": "This is an example of body we need in order to register a user",
+  "properties": {
+    "accessToken": {
+      "type": "string",
+      "description": "the acces token the user has"
+    }
+  },
+  "required": ["accessToken"]
+}
