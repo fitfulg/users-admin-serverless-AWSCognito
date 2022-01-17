@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "title": "Change Password Model",
+  "description": "This is an example of body we need in order to change user password",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "email address of the user",
+      "format": "email"
+    },
+    "password": {
+      "type": "string",
+      "description": "password of the user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+      "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+    },
+    "newPassword": {
+      "type": "string",
+      "description": "new password of the user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+      "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+    }
+  },
+  "required": ["email", "password", "newPassword"]
+}

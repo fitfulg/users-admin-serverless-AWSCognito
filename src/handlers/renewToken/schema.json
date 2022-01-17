@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "title": "Renew Input Model",
+  "description": "This is an example of body we need for renew a user's token",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "email address of the user",
+      "format": "email"
+    },
+    "refreshToken": {
+      "type": "string",
+      "description": "the refresh token the user has"
+    }
+  },
+  "required": ["email", "refreshToken"]
+}

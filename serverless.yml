@@ -56,6 +56,24 @@ functions:
           request:
             schemas:
               application/json: ${file(src/handlers/logIn/schema.json)}
+  renewToken:
+    handler: src/handlers/renewToken/index.handler
+    events:
+      - http:
+          path: /api/user/refresh
+          method: post
+          request:
+            schemas:
+              application/json: ${file(src/handlers/renewToken/schema.json)}
+  changePassword:
+    handler: src/handlers/changePassword/index.handler
+    events:
+      - http:
+          path: /api/user/password
+          method: post
+          request:
+            schemas:
+              application/json: ${file(src/handlers/changePassword/schema.json)}
 resources:
   Resources:
     CognitoUserPool:

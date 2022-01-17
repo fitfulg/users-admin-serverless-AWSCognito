@@ -1,6 +1,6 @@
 const AmazonCognitoId = require('amazon-cognito-identity-js');
 const jwt = require('jsonwebtoken');
-const jwtToPem = require('jwt-to-pem');
+const jwkToPem = require('jwk-to-pem');
 const request = require('request');
 
 //Set fetch, because aws cognito lib was created for browsers.
@@ -63,7 +63,7 @@ const verifyCode = (username, code) => {
   });
 };
 
-//Auth in Cognito.
+//Auth in cognito
 const login = (name, password) => {
   return new Promise((resolve, reject) => {
     try {
@@ -71,11 +71,14 @@ const login = (name, password) => {
         Username: name,
         Password: password,
       });
+
       const userData = {
         Username: name,
         Pool: userPool,
       };
+
       const cognitoUser = new AmazonCognitoId.CognitoUser(userData);
+
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: (result) => {
           resolve({
@@ -94,7 +97,7 @@ const login = (name, password) => {
   });
 };
 
-//Download jwsk from cognito.
+//Download jwsk.
 const downloadJwk = (token) => {
   const urlJwk = `https://cognito-idp.${process.env.REGION}.amazonaws.com/${poolData.UserPoolId}/.well-known/jwks.json`;
 
@@ -109,32 +112,36 @@ const downloadJwk = (token) => {
   });
 };
 
-//Verify token
+//Verify token.
 const verify = (token) => {
   return new Promise((resolve, reject) => {
-    //Get jwks from cognito.
+    //Download jwkt from aws.
     downloadJwk(token)
       .then((body) => {
         let pems = {};
         let keys = body['keys'];
+
         for (let i = 0; i < keys.length; i++) {
-          //Convert each key to PEM.
+          //Convert each key to PEM
           let key_id = keys[i].kid;
           let modulus = keys[i].n;
           let exponent = keys[i].e;
-          let keyType = keys[i].kty;
-          let jwk = { kty: keyType, n: modulus, e: exponent };
-          let pem = jwtToPem(jwk);
+          let key_type = keys[i].kty;
+          let jwk = { kty: key_type, n: modulus, e: exponent };
+          let pem = jwkToPem(jwk);
 
           pems[key_id] = pem;
         }
 
-        //validate token
+        //validate the token
         let decodedJwt = jwt.decode(token, { complete: true });
-        if (!decodedJwt) reject({ error: 'Invalid JWT token' });
+
+        //If is not valid.
+        if (!decodedJwt) reject({ error: 'Not a valid JWT token' });
 
         let kid = decodedJwt.header.kid;
         let pem = pems[kid];
+
         if (!pem) reject({ error: 'Invalid token' });
 
         jwt.verify(token, pem, (err, payload) => {
@@ -148,9 +155,72 @@ const verify = (token) => {
   });
 };
 
+// //Renew token.
+const renewToken = (token, name) => {
+  return new Promise((resolve, reject) => {
+    const RefreshToken = new AmazonCognitoId.CognitoRefreshToken({
+      RefreshToken: token,
+    });
+
+    const userPool = new AmazonCognitoId.CognitoUserPool(poolData);
+
+    const userData = {
+      Username: name,
+      Pool: userPool,
+    };
+
+    const cognitoUser = new AmazonCognitoId.CognitoUser(userData);
+
+    cognitoUser.refreshSession(RefreshToken, (err, session) => {
+      if (err) reject(err);
+      else {
+        let retObj = {
+          access_token: session.accessToken.jwtToken,
+          id_token: session.idToken.jwtToken,
+          refresh_token: session.refreshToken.token,
+        };
+
+        resolve(retObj);
+      }
+    });
+  });
+};
+
+//Change password.
+const changePassword = (username, password, newpassword) => {
+  return new Promise((resolve, reject) => {
+    const authenticationDetails = new AmazonCognitoId.AuthenticationDetails({
+      Username: username,
+      Password: password,
+    });
+
+    const userData = {
+      Username: username,
+      Pool: userPool,
+    };
+
+    const cognitoUser = new AmazonCognitoId.CognitoUser(userData);
+
+    //Validate if the login is correct to make the password change.
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onSuccess: (result) => {
+        cognitoUser.changePassword(password, newpassword, (err, result) => {
+          if (err) reject(err);
+          else resolve(result);
+        });
+      },
+      onFailure: (err) => {
+        reject(err);
+      },
+    });
+  });
+};
+
 module.exports = {
   signUp,
   verifyCode,
   login,
   verify,
+  renewToken,
+  changePassword,
 };

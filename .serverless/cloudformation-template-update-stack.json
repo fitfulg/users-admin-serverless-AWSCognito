@@ -101,6 +101,18 @@
         "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-logIn"
       }
     },
+    "RenewTokenLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-renewToken"
+      }
+    },
+    "ChangePasswordLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-changePassword"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -185,7 +197,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/authorizer.handler",
         "Runtime": "nodejs12.x",
@@ -221,7 +233,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/getInfo/index.handler",
         "Runtime": "nodejs12.x",
@@ -257,7 +269,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/signUp/index.handler",
         "Runtime": "nodejs12.x",
@@ -293,7 +305,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/verifyCode/index.handler",
         "Runtime": "nodejs12.x",
@@ -329,7 +341,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/logIn/index.handler",
         "Runtime": "nodejs12.x",
@@ -358,54 +370,146 @@
         "LogInLogGroup"
       ]
     },
-    "AuthLambdaVersionjNx9p00r3hRBbs7zLRG7nJ46t2qU1JFdC6yfN9iCbFE": {
+    "RenewTokenLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
+        },
+        "Handler": "src/handlers/renewToken/index.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "ercardona-workshop8-dev-renewToken",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USER_POOL_ID": {
+              "Ref": "CognitoUserPool"
+            },
+            "APP_CLIENT_ID": {
+              "Ref": "CognitoUserPoolClient"
+            },
+            "REGION": "us-east-1"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "RenewTokenLogGroup"
+      ]
+    },
+    "ChangePasswordLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/ercardona-workshop8/dev/1642414366661-2022-01-17T10:12:46.661Z/ercardona-workshop8.zip"
+        },
+        "Handler": "src/handlers/changePassword/index.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "ercardona-workshop8-dev-changePassword",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USER_POOL_ID": {
+              "Ref": "CognitoUserPool"
+            },
+            "APP_CLIENT_ID": {
+              "Ref": "CognitoUserPoolClient"
+            },
+            "REGION": "us-east-1"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ChangePasswordLogGroup"
+      ]
+    },
+    "AuthLambdaVersionEHJM87fzlUIKAdjC8j4zhrKPfc2rnTTbfGsvS7XNuno": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AuthLambdaFunction"
         },
-        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
       }
     },
-    "GetInfoLambdaVersionbcFU6ssMcP5exvUETYotmo5VgQy3iawD1Rl5L03zU8": {
+    "GetInfoLambdaVersionPXS25yFUCIghAfzDsIfvdBbzueWFcmkJgp2TXPQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetInfoLambdaFunction"
         },
-        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
       }
     },
-    "SignUpLambdaVersion6LBMj97Mw5baQ1aEHSl7bwk4cUZECmo3B2iaaah9H2A": {
+    "SignUpLambdaVersionuBJbzbY7LlxR5jf4W78dLKTXqj1ud0g4iwkvfFkY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SignUpLambdaFunction"
         },
-        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
       }
     },
-    "VerifyCodeLambdaVersionAlrMbCRtjpb7lRm2dMkrFbUvLriVJUmiUseK5hNwUY": {
+    "VerifyCodeLambdaVersionoKKccXKCcGtBypLdlC7IFJgRivmNdIaWHMLprL3IWE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "VerifyCodeLambdaFunction"
         },
-        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
       }
     },
-    "LogInLambdaVersionBa3dzDbE1fLJTRauj2JlfPcrFYpXZ7RywvT3nIkU": {
+    "LogInLambdaVersionIzc3KmwUT8N1u8jv7ziWz6TFMCpwLcT0Kht3ykZO5sE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "LogInLambdaFunction"
         },
-        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
+      }
+    },
+    "RenewTokenLambdaVersionpZSBKUbMz1RTpXEKT4JY8efWpqNSFEzx9PtyJ8gA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RenewTokenLambdaFunction"
+        },
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
+      }
+    },
+    "ChangePasswordLambdaVersionbwFE99XMWo1j4qzDwRaB9FflVfgbO3yGFETmFidU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ChangePasswordLambdaFunction"
+        },
+        "CodeSha256": "/3rgESSdIi+zjyRAIf3vAlJMGjq1XoDqUbjOHrz0sZ0="
       }
     },
     "ApiGatewayRestApi": {
@@ -490,6 +594,30 @@
           "Ref": "ApiGatewayResourceApiUser"
         },
         "PathPart": "login",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceApiUserRefresh": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceApiUser"
+        },
+        "PathPart": "refresh",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceApiUserPassword": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceApiUser"
+        },
+        "PathPart": "password",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -704,6 +832,114 @@
         "LogInLambdaPermissionApiGateway"
       ]
     },
+    "ApiGatewayMethodApiUserRefreshPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceApiUserRefresh"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "RenewTokenLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayErcardonaworkshop8RequestValidator"
+        },
+        "RequestModels": {
+          "application/json": {
+            "Ref": "ApiGatewayMethodApiUserRefreshPostApplicationJsonModel"
+          }
+        }
+      },
+      "DependsOn": [
+        "RenewTokenLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayMethodApiUserPasswordPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceApiUserPassword"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ChangePasswordLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayErcardonaworkshop8RequestValidator"
+        },
+        "RequestModels": {
+          "application/json": {
+            "Ref": "ApiGatewayMethodApiUserPasswordPostApplicationJsonModel"
+          }
+        }
+      },
+      "DependsOn": [
+        "ChangePasswordLambdaPermissionApiGateway"
+      ]
+    },
     "ApiGatewayErcardonaworkshop8RequestValidator": {
       "Type": "AWS::ApiGateway::RequestValidator",
       "Properties": {
@@ -790,6 +1026,71 @@
         "ContentType": "application/json"
       }
     },
+    "ApiGatewayMethodApiUserRefreshPostApplicationJsonModel": {
+      "Type": "AWS::ApiGateway::Model",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ContentType": "application/json",
+        "Schema": {
+          "type": "object",
+          "title": "Renew Input Model",
+          "description": "This is an example of body we need for renew a user's token",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "email address of the user",
+              "format": "email"
+            },
+            "refreshToken": {
+              "type": "string",
+              "description": "the refresh token the user has"
+            }
+          },
+          "required": [
+            "email",
+            "refreshToken"
+          ]
+        }
+      }
+    },
+    "ApiGatewayMethodApiUserPasswordPostApplicationJsonModel": {
+      "Type": "AWS::ApiGateway::Model",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ContentType": "application/json",
+        "Schema": {
+          "type": "object",
+          "title": "Change Password Model",
+          "description": "This is an example of body we need in order to change user password",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "email address of the user",
+              "format": "email"
+            },
+            "password": {
+              "type": "string",
+              "description": "password of the user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+              "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+            },
+            "newPassword": {
+              "type": "string",
+              "description": "new password of the user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+              "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+            }
+          },
+          "required": [
+            "email",
+            "password",
+            "newPassword"
+          ]
+        }
+      }
+    },
     "AuthApiGatewayAuthorizer": {
       "Type": "AWS::ApiGateway::Authorizer",
       "Properties": {
@@ -824,7 +1125,7 @@
         "Type": "TOKEN"
       }
     },
-    "ApiGatewayDeployment1642413243959": {
+    "ApiGatewayDeployment1642414363690": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -836,7 +1137,9 @@
         "ApiGatewayMethodApiInfoGet",
         "ApiGatewayMethodApiUserSignupPost",
         "ApiGatewayMethodApiUserVerifyPost",
-        "ApiGatewayMethodApiUserLoginPost"
+        "ApiGatewayMethodApiUserLoginPost",
+        "ApiGatewayMethodApiUserRefreshPost",
+        "ApiGatewayMethodApiUserPasswordPost"
       ]
     },
     "GetInfoLambdaPermissionApiGateway": {
@@ -1024,6 +1327,80 @@
         }
       }
     },
+    "RenewTokenLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RenewTokenLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ChangePasswordLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ChangePasswordLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
     "CognitoUserPool": {
       "Type": "AWS::Cognito::UserPool",
       "Properties": {
@@ -1062,7 +1439,7 @@
     "AuthLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AuthLambdaVersionjNx9p00r3hRBbs7zLRG7nJ46t2qU1JFdC6yfN9iCbFE"
+        "Ref": "AuthLambdaVersionEHJM87fzlUIKAdjC8j4zhrKPfc2rnTTbfGsvS7XNuno"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-AuthLambdaFunctionQualifiedArn"
@@ -1071,7 +1448,7 @@
     "GetInfoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetInfoLambdaVersionbcFU6ssMcP5exvUETYotmo5VgQy3iawD1Rl5L03zU8"
+        "Ref": "GetInfoLambdaVersionPXS25yFUCIghAfzDsIfvdBbzueWFcmkJgp2TXPQ"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-GetInfoLambdaFunctionQualifiedArn"
@@ -1080,7 +1457,7 @@
     "SignUpLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SignUpLambdaVersion6LBMj97Mw5baQ1aEHSl7bwk4cUZECmo3B2iaaah9H2A"
+        "Ref": "SignUpLambdaVersionuBJbzbY7LlxR5jf4W78dLKTXqj1ud0g4iwkvfFkY"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-SignUpLambdaFunctionQualifiedArn"
@@ -1089,7 +1466,7 @@
     "VerifyCodeLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "VerifyCodeLambdaVersionAlrMbCRtjpb7lRm2dMkrFbUvLriVJUmiUseK5hNwUY"
+        "Ref": "VerifyCodeLambdaVersionoKKccXKCcGtBypLdlC7IFJgRivmNdIaWHMLprL3IWE"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-VerifyCodeLambdaFunctionQualifiedArn"
@@ -1098,10 +1475,28 @@
     "LogInLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "LogInLambdaVersionBa3dzDbE1fLJTRauj2JlfPcrFYpXZ7RywvT3nIkU"
+        "Ref": "LogInLambdaVersionIzc3KmwUT8N1u8jv7ziWz6TFMCpwLcT0Kht3ykZO5sE"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-LogInLambdaFunctionQualifiedArn"
+      }
+    },
+    "RenewTokenLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RenewTokenLambdaVersionpZSBKUbMz1RTpXEKT4JY8efWpqNSFEzx9PtyJ8gA"
+      },
+      "Export": {
+        "Name": "sls-ercardona-workshop8-dev-RenewTokenLambdaFunctionQualifiedArn"
+      }
+    },
+    "ChangePasswordLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ChangePasswordLambdaVersionbwFE99XMWo1j4qzDwRaB9FflVfgbO3yGFETmFidU"
+      },
+      "Export": {
+        "Name": "sls-ercardona-workshop8-dev-ChangePasswordLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
