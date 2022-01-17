@@ -71,6 +71,12 @@
         }
       }
     },
+    "AuthLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-auth"
+      }
+    },
     "GetInfoLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
@@ -87,6 +93,12 @@
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
         "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-verifyCode"
+      }
+    },
+    "LogInLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/ercardona-workshop8-dev-logIn"
       }
     },
     "IamRoleLambdaExecution": {
@@ -166,6 +178,42 @@
         }
       }
     },
+    "AuthLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+        },
+        "Handler": "src/handlers/authorizer.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "ercardona-workshop8-dev-auth",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USER_POOL_ID": {
+              "Ref": "CognitoUserPool"
+            },
+            "APP_CLIENT_ID": {
+              "Ref": "CognitoUserPoolClient"
+            },
+            "REGION": "us-east-1"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "AuthLogGroup"
+      ]
+    },
     "GetInfoLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
@@ -173,7 +221,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642155483612-2022-01-14T10:18:03.612Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/getInfo/index.handler",
         "Runtime": "nodejs12.x",
@@ -209,7 +257,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642155483612-2022-01-14T10:18:03.612Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/signUp/index.handler",
         "Runtime": "nodejs12.x",
@@ -245,7 +293,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/ercardona-workshop8/dev/1642155483612-2022-01-14T10:18:03.612Z/ercardona-workshop8.zip"
+          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
         },
         "Handler": "src/handlers/verifyCode/index.handler",
         "Runtime": "nodejs12.x",
@@ -274,34 +322,90 @@
         "VerifyCodeLogGroup"
       ]
     },
-    "GetInfoLambdaVersionPcXYHLJGnzRcGn5iDs0BIc6SNp3Omu1bKDoJbf8J2g": {
+    "LogInLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/ercardona-workshop8/dev/1642413247044-2022-01-17T09:54:07.044Z/ercardona-workshop8.zip"
+        },
+        "Handler": "src/handlers/logIn/index.handler",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "ercardona-workshop8-dev-logIn",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USER_POOL_ID": {
+              "Ref": "CognitoUserPool"
+            },
+            "APP_CLIENT_ID": {
+              "Ref": "CognitoUserPoolClient"
+            },
+            "REGION": "us-east-1"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "LogInLogGroup"
+      ]
+    },
+    "AuthLambdaVersionjNx9p00r3hRBbs7zLRG7nJ46t2qU1JFdC6yfN9iCbFE": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "AuthLambdaFunction"
+        },
+        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+      }
+    },
+    "GetInfoLambdaVersionbcFU6ssMcP5exvUETYotmo5VgQy3iawD1Rl5L03zU8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetInfoLambdaFunction"
         },
-        "CodeSha256": "NXSY9kjM/vmAZgJzejy4uzA6hciXp30Xu5jPEo/FIFo="
+        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
       }
     },
-    "SignUpLambdaVersionBYloTvumLVG5Bb7grGLkgv1Ype8wyoJcDOOqMHPJM": {
+    "SignUpLambdaVersion6LBMj97Mw5baQ1aEHSl7bwk4cUZECmo3B2iaaah9H2A": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SignUpLambdaFunction"
         },
-        "CodeSha256": "NXSY9kjM/vmAZgJzejy4uzA6hciXp30Xu5jPEo/FIFo="
+        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
       }
     },
-    "VerifyCodeLambdaVersionJrEUlxzeZqXsqgWfw007limJa9YrGmpCzugC55CM": {
+    "VerifyCodeLambdaVersionAlrMbCRtjpb7lRm2dMkrFbUvLriVJUmiUseK5hNwUY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "VerifyCodeLambdaFunction"
         },
-        "CodeSha256": "NXSY9kjM/vmAZgJzejy4uzA6hciXp30Xu5jPEo/FIFo="
+        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
+      }
+    },
+    "LogInLambdaVersionBa3dzDbE1fLJTRauj2JlfPcrFYpXZ7RywvT3nIkU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LogInLambdaFunction"
+        },
+        "CodeSha256": "7sICPCSDkhOe2xGDQD1RV8ThHCXhLEA+cUtiENIT1zM="
       }
     },
     "ApiGatewayRestApi": {
@@ -379,6 +483,18 @@
         }
       }
     },
+    "ApiGatewayResourceApiUserLogin": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceApiUser"
+        },
+        "PathPart": "login",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
     "ApiGatewayMethodApiInfoGet": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
@@ -391,7 +507,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "CUSTOM",
+        "AuthorizerId": {
+          "Ref": "AuthApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -421,9 +540,7 @@
         },
         "MethodResponses": []
       },
-      "DependsOn": [
-        "GetInfoLambdaPermissionApiGateway"
-      ]
+      "DependsOn": "AuthApiGatewayAuthorizer"
     },
     "ApiGatewayMethodApiUserSignupPost": {
       "Type": "AWS::ApiGateway::Method",
@@ -533,6 +650,60 @@
         "VerifyCodeLambdaPermissionApiGateway"
       ]
     },
+    "ApiGatewayMethodApiUserLoginPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceApiUserLogin"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "LogInLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": [],
+        "RequestValidatorId": {
+          "Ref": "ApiGatewayErcardonaworkshop8RequestValidator"
+        },
+        "RequestModels": {
+          "application/json": {
+            "Ref": "ApiGatewayMethodApiUserLoginPostApplicationJsonModel"
+          }
+        }
+      },
+      "DependsOn": [
+        "LogInLambdaPermissionApiGateway"
+      ]
+    },
     "ApiGatewayErcardonaworkshop8RequestValidator": {
       "Type": "AWS::ApiGateway::RequestValidator",
       "Properties": {
@@ -610,7 +781,50 @@
         }
       }
     },
-    "ApiGatewayDeployment1642155481438": {
+    "ApiGatewayMethodApiUserLoginPostApplicationJsonModel": {
+      "Type": "AWS::ApiGateway::Model",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ContentType": "application/json"
+      }
+    },
+    "AuthApiGatewayAuthorizer": {
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "auth",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "AuthorizerUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "AuthLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        },
+        "Type": "TOKEN"
+      }
+    },
+    "ApiGatewayDeployment1642413243959": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -621,7 +835,8 @@
       "DependsOn": [
         "ApiGatewayMethodApiInfoGet",
         "ApiGatewayMethodApiUserSignupPost",
-        "ApiGatewayMethodApiUserVerifyPost"
+        "ApiGatewayMethodApiUserVerifyPost",
+        "ApiGatewayMethodApiUserLoginPost"
       ]
     },
     "GetInfoLambdaPermissionApiGateway": {
@@ -630,6 +845,43 @@
         "FunctionName": {
           "Fn::GetAtt": [
             "GetInfoLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "AuthLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "AuthLambdaFunction",
             "Arn"
           ]
         },
@@ -735,6 +987,43 @@
         }
       }
     },
+    "LogInLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LogInLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
     "CognitoUserPool": {
       "Type": "AWS::Cognito::UserPool",
       "Properties": {
@@ -770,10 +1059,19 @@
         "Name": "sls-ercardona-workshop8-dev-ServerlessDeploymentBucketName"
       }
     },
+    "AuthLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "AuthLambdaVersionjNx9p00r3hRBbs7zLRG7nJ46t2qU1JFdC6yfN9iCbFE"
+      },
+      "Export": {
+        "Name": "sls-ercardona-workshop8-dev-AuthLambdaFunctionQualifiedArn"
+      }
+    },
     "GetInfoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetInfoLambdaVersionPcXYHLJGnzRcGn5iDs0BIc6SNp3Omu1bKDoJbf8J2g"
+        "Ref": "GetInfoLambdaVersionbcFU6ssMcP5exvUETYotmo5VgQy3iawD1Rl5L03zU8"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-GetInfoLambdaFunctionQualifiedArn"
@@ -782,7 +1080,7 @@
     "SignUpLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SignUpLambdaVersionBYloTvumLVG5Bb7grGLkgv1Ype8wyoJcDOOqMHPJM"
+        "Ref": "SignUpLambdaVersion6LBMj97Mw5baQ1aEHSl7bwk4cUZECmo3B2iaaah9H2A"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-SignUpLambdaFunctionQualifiedArn"
@@ -791,10 +1089,19 @@
     "VerifyCodeLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "VerifyCodeLambdaVersionJrEUlxzeZqXsqgWfw007limJa9YrGmpCzugC55CM"
+        "Ref": "VerifyCodeLambdaVersionAlrMbCRtjpb7lRm2dMkrFbUvLriVJUmiUseK5hNwUY"
       },
       "Export": {
         "Name": "sls-ercardona-workshop8-dev-VerifyCodeLambdaFunctionQualifiedArn"
+      }
+    },
+    "LogInLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "LogInLambdaVersionBa3dzDbE1fLJTRauj2JlfPcrFYpXZ7RywvT3nIkU"
+      },
+      "Export": {
+        "Name": "sls-ercardona-workshop8-dev-LogInLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {

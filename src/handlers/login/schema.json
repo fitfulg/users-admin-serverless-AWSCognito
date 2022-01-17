@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "title": "LogIn Model",
+  "description": "This is an example of the body we need in order to retrieve token for a given user",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "email address of the user",
+      "format": "email"
+    },
+    "password": {
+      "type": "string",
+      "description": "password of the user (Min 8 characters, 1 UpperCase, 1 Number and 1 Lowercase",
+      "pattern": "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
+    }
+  },
+  "required": ["email", "password"]
+}

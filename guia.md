@@ -61,3 +61,21 @@ serverless.yml:
 npm install amazon-cognito-identity-js
 npm install node-fetch@2
 ```
+
+## 4 Loguear usuarios y segurizar endpoints
+
+- Crear un nuevo endpoint en donde nuestro usuario pueda pedir sus tokens, brindando su email y contraseña.
+- Segurizar nuestro endpoint getInfo para que solo usuarios autenticados puedan acceder a la respuesta.
+
+#### Instalación de nuevas librerias
+
+##### **_jwk-to-pem:_** Nos va a ayudar a convertir la info que nos da cognito sobre como estan encriptados nuestros token en el formato pem necesario para decodificar el token.
+
+##### **_jsonwebtoken_** para decodificar nuestro token.
+
+##### **_request_**: Para realizar un Get HTTP a Cognito, y pedirle informacion sobre el tipo de encriptacion que tienen nuestros tokens
+
+```
+npm install jwk-to-pem jsonwebtoken request
+
+```

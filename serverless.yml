@@ -20,12 +20,15 @@ custom:
   userPoolClient: ${self:service}-${self:provider.stage}-user-pool-client
 
 functions:
+  auth:
+    handler: src/handlers/authorizer.handler
   getInfo:
     handler: src/handlers/getInfo/index.handler
     events:
       - http:
           path: /api/info
           method: get
+          authorizer: auth
   signUp:
     handler: src/handlers/signUp/index.handler
     events:
@@ -44,6 +47,15 @@ functions:
           request:
             schemas:
               application/json: ${file(src/handlers/verifyCode/schema.json)}
+  logIn:
+    handler: src/handlers/logIn/index.handler
+    events:
+      - http:
+          path: /api/user/login
+          method: post
+          request:
+            schemas:
+              application/json: ${file(src/handlers/logIn/schema.json)}
 resources:
   Resources:
     CognitoUserPool:
